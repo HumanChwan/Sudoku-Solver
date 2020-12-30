@@ -6,6 +6,6 @@ HardGrid.txt conatains Sudoku grids with grids which are categorized as `medium`
 
 `easy` : requires brute force  
 `medium` : requires brute force along with Numerical Solving  
-`hard` : requires alogorithms according to requirement     
+`hard` : requires algorithms according to requirement     
 
 `SodSolv.cpp` : C++14/C++17/C++20 file  
