@@ -3,7 +3,7 @@
 #define pb push_back
 
 const int r = 9, c = 9;
-std :: vector<std :: vector<int>> S(r, std :: vector<int>(c));
+int S[r][c];
 void Display(){
     for(int i = 0; i < r; i++){
         for(int j = 0; j < c; j++){
@@ -17,7 +17,7 @@ void Display(){
     }
 }
 int main(){
-    for(auto& Si : S) for(auto& Sij : Si) std :: cin >> Sij;
+    for(int i = 0; i < r; ++i) for(int j = 0; j < c; ++j) std :: cin >> S[i][j];
     Display();
     return 0;
 }
