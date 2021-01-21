@@ -1,2 +1,4 @@
 check.cpp
 *.exe
+SodSolv.o
+SodSolv.exe
