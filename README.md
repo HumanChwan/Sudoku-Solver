@@ -9,5 +9,3 @@ HardGrid.txt contains Sudoku grids with grids which are categorized as `medium` 
 `hard` : requires methods according to requirement     
 
 `SodSolv.cpp` : C++14/C++17/C++20 file  
-
-test test test
