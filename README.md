@@ -2,7 +2,7 @@
 Language : C++  
 EasyGrid.txt contains Sudoku grids with grids which are categorized as `easy` to solve  
 MedGrid.txt contains Sudoku grids with grids which are categorized as `medium` to solve   
-HardGrid.txt contains Sudoku grids with grids which are categorized as `hard` to solve
+HardGrid.txt contains Sudoku grids with grids which are categorized as `hard` to solve    
 ExpertGrid.txt contains Sudoku grids with grids which are categorized as `expert` to solve      
 
 `easy` : requires brute force  
