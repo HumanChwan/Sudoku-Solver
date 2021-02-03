@@ -42,8 +42,16 @@ void mod_init(int rm){
     b_i.erase(remove(b_i.begin(), b_i.end(), rm), b_i.end());
     return;
 }
-void mod_poss_init(vector < int > rm){
-    ps_i.erase(remove(ps_i.begin(), ps_i.end(), rm), ps_i.end());
+void mod_poss_init(int rm){
+    vector < int >::iterator itb;
+    vector < vector < int > >::iterator itp = ps_i.begin(); 
+    for(itb = b_i.begin(); itb != b_i.end(); ++itb){
+        if(rm == *itb){
+            ps_i.erase(itp);
+            break;
+        }
+        ++itp;
+    }
     return;
 }
 void row_init(int rn){
@@ -64,6 +72,7 @@ void square_init(int sn){
     return;
 }
 void poss_init(){
+    ps_i.clear();
     ps_i.resize(b_i.size());
     fl(i, 0, b_i.size()){
         row_init(b_i[i]/10);
@@ -99,25 +108,12 @@ void Solve(){
     }
 }
 void brute_solve(){
-
     while(true){
         int temp = b_i.size();
         fl(i, 0, b_i.size()){
-            row_init(b_i[i]/10);
-            column_init(b_i[i]%10);
-            square_init(b_i[i]);
-            vector < int > netcnt{1, 2, 3, 4, 5, 6, 7, 8, 9};
-            for(auto it = netcnt.begin(); it != netcnt.end(); it++){
-                if(binary_search(row.begin(), row.end(), *it)) netcnt.erase(it), --it;
-            }
-            for(auto it = netcnt.begin(); it != netcnt.end(); it++){
-                if(binary_search(column.begin(), column.end(), *it)) netcnt.erase(it), --it;
-            }
-            for(auto it = netcnt.begin(); it != netcnt.end(); it++){
-                if(binary_search(square.begin(), square.end(), *it)) netcnt.erase(it), --it;
-            }
-            if(netcnt.size() == 1){
-                S[b_i[i]/10][b_i[i]%10] = netcnt[0];
+            if(ps_i[i].size() == 1){
+                S[b_i[i]/10][b_i[i]%10] = ps_i[i][0];
+                mod_poss_init(b_i[i]);
                 mod_init(b_i[i]);
                 if(!b_i.size()) return;
             }
@@ -162,7 +158,9 @@ void num_solve(){
                     }
                     if(ct == 1){
                         S[fill/10][fill%10] = i;
+                        //mod_poss_init(fill);
                         mod_init(fill);
+                        poss_init();
                         if(!b_i.size()) return;
                     }
                 }
@@ -194,6 +192,7 @@ void eliminator_solve(){
                 }
                 if(ct == 1){
                     S[fill/10][fill%10] = *it;
+                    mod_poss_init(fill);
                     mod_init(fill);
                     if(!b_i.size()) return;
                 }
@@ -219,6 +218,7 @@ void eliminator_solve(){
                 }
                 if(ct == 1){
                     S[fill/10][fill%10] = *it;
+                    mod_poss_init(fill);
                     mod_init(fill);
                     if(!b_i.size()) return;
                 }
@@ -233,7 +233,6 @@ bool specialsorter(int &a, int &b){
 void probable_solve(){
     vector < int > poss_arr;
     int temp_S[r][c];
-    poss_init();
     fl(i, 0, b_i.size()){
         if(ps_i[i].size() == 2){
             int row_temp = b_i[i]/10;
@@ -260,7 +259,9 @@ void probable_solve(){
 
     fl(i, 0, poss_arr.size()){
         S[poss_arr[i]/1000][(poss_arr[i]%1000)/100] = (poss_arr[i]%100)/10;
+        mod_poss_init(poss_arr[i]/100);
         mod_init(poss_arr[i]/100);
+
         Solve();
         if(!b_i.size()) return;
         else{
