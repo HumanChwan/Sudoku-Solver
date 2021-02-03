@@ -10,6 +10,7 @@ using namespace std;
 const int r = 9, c = 9;
 int S[r][c];
 vector < int > b_i;
+vector < vector < int > > ps_i;
 set < int > row, column, square;
 void Input(){
     fl(i, 0, r) fl(j, 0, c) cin >> S[i][j];
@@ -30,6 +31,7 @@ void Display(){
     return;
 }
 void blank_init(){
+    b_i.clear();
     fl(i, 0, r){
         fl(j, 0, c){
             if(!S[i][j]) b_i.pb(i*10 + j);
@@ -40,6 +42,10 @@ void mod_init(int rm){
     b_i.erase(remove(b_i.begin(), b_i.end(), rm), b_i.end());
     return;
 }
+// void mod_poss_init(int rm){
+//     ps_i.erase(remove(ps_i.begin(), ps_i.end(), rm), ps_i.end());
+//     return;
+// }
 void row_init(int rn){
     row.clear();
     fl(i, 0, r) row.insert(S[rn][i]);
@@ -57,11 +63,29 @@ void square_init(int sn){
     fl(i, 0, r/3) fl(j, 0, c/3) square.insert(S[row_index + i][column_index + j]);
     return;
 }
+void poss_init(){
+    ps_i.resize(b_i.size());
+    fl(i, 0, b_i.size()){
+        row_init(b_i[i]/10);
+        column_init(b_i[i]%10);
+        square_init(b_i[i]);
+        vector < int > netcnt{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        for(auto it = netcnt.begin(); it != netcnt.end(); it++){
+            if(binary_search(row.begin(), row.end(), *it)) netcnt.erase(it), --it;
+        }
+        for(auto it = netcnt.begin(); it != netcnt.end(); it++){
+            if(binary_search(column.begin(), column.end(), *it)) netcnt.erase(it), --it;
+        }
+        for(auto it = netcnt.begin(); it != netcnt.end(); it++){
+            if(binary_search(square.begin(), square.end(), *it)) netcnt.erase(it), --it;
+        }
+        ps_i[i] = netcnt;
+    }
+}
 void Solve(){
     void brute_solve();
     void num_solve();
     void eliminator_solve();
-    blank_init();
     int temp = b_i.size();
     while(true){
         temp = b_i.size();
@@ -203,9 +227,48 @@ void eliminator_solve(){
         if(temp == b_i.size()) return;
     }
 }
-
+bool specialsorter(int &a, int &b){
+    return (a%10 < b%10);
+}
 void probable_solve(){
-    
+    vector < int > poss_arr;
+    int temp_S[r][c];
+
+    fl(i, 0, b_i.size()){
+        if(ps_i[i].size() == 2){
+            int row_temp = b_i[i]/10;
+            int col_temp = b_i[i]%10;
+            int occ_one = 0, occ_two = 0;
+            fl(j, 0, b_i.size()){
+                if(b_i[j]/10 == row_temp ^ b_i[j]%10 == col_temp){
+                    fl(k, 0, ps_i[j].size()){
+                        if(ps_i[j][k] == ps_i[i][0]) occ_one++;
+                        if(ps_i[j][k] == ps_i[i][1]) occ_two++;
+                    }
+                }
+            }
+            if(occ_one > occ_two)
+                poss_arr.pb(row_temp*1000 + col_temp*100 + ps_i[i][1]*10 + occ_two);
+            else
+                poss_arr.pb(row_temp*1000 + col_temp*100 + ps_i[i][0]*10 + occ_one);
+        }
+    }
+
+    fl(i, 0, r) fl(j, 0, c) temp_S[i][j] = S[i][j];
+
+    sort(poss_arr.begin(), poss_arr.end(), specialsorter);
+
+    fl(i, 0, poss_arr.size()){
+        S[poss_arr[i]/1000][(poss_arr[i]%1000)/100] = (poss_arr[i]%100)/10;
+        mod_init(poss_arr[i]/100);
+        Solve();
+        if(!b_i.size()) return;
+        else{
+            fl(i, 0, r) fl(j, 0, c) S[i][j] = temp_S[i][j];
+            blank_init();
+            poss_init();
+        }
+    }
 }
 
 
@@ -213,9 +276,12 @@ int main(){
     Input();
     Display();
     blank_init();
+    poss_init();
     Solve();
-    if(b_i.size())
+    if(b_i.size()){
+        poss_init();
         probable_solve();
+    } 
     if(b_i.size())
         cout << "Has either more than one solution or no solution\n"; 
     Display();
