@@ -42,10 +42,10 @@ void mod_init(int rm){
     b_i.erase(remove(b_i.begin(), b_i.end(), rm), b_i.end());
     return;
 }
-// void mod_poss_init(int rm){
-//     ps_i.erase(remove(ps_i.begin(), ps_i.end(), rm), ps_i.end());
-//     return;
-// }
+void mod_poss_init(vector < int > rm){
+    ps_i.erase(remove(ps_i.begin(), ps_i.end(), rm), ps_i.end());
+    return;
+}
 void row_init(int rn){
     row.clear();
     fl(i, 0, r) row.insert(S[rn][i]);
@@ -233,7 +233,7 @@ bool specialsorter(int &a, int &b){
 void probable_solve(){
     vector < int > poss_arr;
     int temp_S[r][c];
-
+    poss_init();
     fl(i, 0, b_i.size()){
         if(ps_i[i].size() == 2){
             int row_temp = b_i[i]/10;
@@ -278,10 +278,8 @@ int main(){
     blank_init();
     poss_init();
     Solve();
-    if(b_i.size()){
-        poss_init();
+    if(b_i.size())
         probable_solve();
-    } 
     if(b_i.size())
         cout << "Has either more than one solution or no solution\n"; 
     Display();
