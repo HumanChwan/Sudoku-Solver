@@ -1,1 +1,0 @@
-ps_i.erase(itp);
