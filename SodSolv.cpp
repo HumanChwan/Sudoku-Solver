@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <fstream>
 #define pb push_back
 #define fl(i, a, b) for(int i = a; i < b; ++i)
 
@@ -13,7 +14,10 @@ vector < int > b_i;
 vector < vector < int > > ps_i;
 set < int > row, column, square;
 void Input(){
-    fl(i, 0, r) fl(j, 0, c) cin >> S[i][j];
+    ifstream read;
+    read.open("board.txt");
+    fl(i, 0, r) fl(j, 0, c) read >> S[i][j];
+    read.close();
     return;
 }
 void Display(){
