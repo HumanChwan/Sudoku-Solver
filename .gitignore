@@ -2,3 +2,5 @@ check.cpp
 *.exe
 SodSolv.o
 SodSolv.exe
+check.c
+board.txt

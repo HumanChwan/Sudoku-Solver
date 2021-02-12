@@ -11,3 +11,6 @@ ExpertGrid.txt contains Sudoku grids with grids which are categorized as `expert
 `expert` : requires to take an assumption based on a simple probability, and thereby applting other ways i.e. brute force and such     
 
 `SodSolv.cpp` : C++14/C++17 file
+
+# Contributor
+1. Dinesh Chukkala(Repository Owner : @HumanChwan)

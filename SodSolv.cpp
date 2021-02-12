@@ -11,7 +11,7 @@ const int r = 9, c = 9;
 int S[r][c];
 vector < int > b_i;
 vector < vector < int > > ps_i;
-set < int > row, column, square;
+multiset < int > row, column, square;
 void Input(){
     fl(i, 0, r) fl(j, 0, c) cin >> S[i][j];
     return;
@@ -113,8 +113,9 @@ void brute_solve(){
         fl(i, 0, b_i.size()){
             if(ps_i[i].size() == 1){
                 S[b_i[i]/10][b_i[i]%10] = ps_i[i][0];
-                mod_poss_init(b_i[i]);
+                // mod_poss_init(b_i[i]);
                 mod_init(b_i[i]);
+                poss_init();
                 if(!b_i.size()) return;
             }
         }
@@ -192,8 +193,9 @@ void eliminator_solve(){
                 }
                 if(ct == 1){
                     S[fill/10][fill%10] = *it;
-                    mod_poss_init(fill);
+                    //mod_poss_init(fill);
                     mod_init(fill);
+                    poss_init();
                     if(!b_i.size()) return;
                 }
             }
@@ -218,8 +220,9 @@ void eliminator_solve(){
                 }
                 if(ct == 1){
                     S[fill/10][fill%10] = *it;
-                    mod_poss_init(fill);
+                    //mod_poss_init(fill);
                     mod_init(fill);
+                    poss_init();                    
                     if(!b_i.size()) return;
                 }
             }
@@ -230,7 +233,8 @@ void eliminator_solve(){
 bool specialsorter(int &a, int &b){
     return (a%10 < b%10);
 }
-void probable_solve(){
+int ct = 0;
+void probable_solve(bool p){
     vector < int > poss_arr;
     int temp_S[r][c];
     fl(i, 0, b_i.size()){
@@ -259,15 +263,38 @@ void probable_solve(){
 
     fl(i, 0, poss_arr.size()){
         S[poss_arr[i]/1000][(poss_arr[i]%1000)/100] = (poss_arr[i]%100)/10;
-        mod_poss_init(poss_arr[i]/100);
+        //mod_poss_init(poss_arr[i]/100);
         mod_init(poss_arr[i]/100);
+        poss_init();
 
         Solve();
-        if(!b_i.size()) return;
+        if(!b_i.size()){
+            return;
+        }
         else{
             fl(i, 0, r) fl(j, 0, c) S[i][j] = temp_S[i][j];
             blank_init();
             poss_init();
+        }
+    }
+    if(p) ct++;
+    if(p){
+        fl(i, 0, poss_arr.size()){
+            S[poss_arr[i]/1000][(poss_arr[i]%1000)/100] = (poss_arr[i]%100)/10;
+            //mod_poss_init(poss_arr[i]/100);
+            poss_init();
+            mod_init(poss_arr[i]/100);
+
+            probable_solve(0);
+
+            if(!b_i.size()){
+                return;
+            }
+            else{
+                fl(i, 0, r) fl(j, 0, c) S[i][j] = temp_S[i][j];
+                blank_init();
+                poss_init();
+            }
         }
     }
 }
@@ -280,9 +307,10 @@ int main(){
     poss_init();
     Solve();
     if(b_i.size())
-        probable_solve();
+        probable_solve(1);
     if(b_i.size())
         cout << "Has either more than one solution or no solution\n"; 
+     
     Display();
     return 0;
 }
