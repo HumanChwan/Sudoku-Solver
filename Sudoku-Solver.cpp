@@ -5,7 +5,7 @@
 using namespace std;
 
 const int R = 9, C = 9, SQ = 9, SET = 9, SQR = 3, SQC = 3;
-int Board[R][C];
+vector<vector<int>> Board(R, vector<int>(C));
 int Empty;
 vector<vector<bool>> NUMS_EXIST;
 vector<vector<bool>> NUMR_EXIST;
@@ -215,39 +215,28 @@ bool finalCheck() {
     return true;
 }
 
-
 void backtrack_solve() {
     void Solve();
+    vector<vector<int>> BoardHist;
+    BoardHist = Board;
     for (int i = 0; i < R; ++i) {
         for (int j = 0; j < C; ++j) {
             if (Board[i][j]) continue;
             int count = 0;
-            vector< int > POSS;
+            vector<int> POSS;
             for (int NUM = 1; NUM <= SET; ++NUM) {
-                if(PossibleAt(i, j, NUM)){
+                if (PossibleAt(i, j, NUM)) {
                     count++;
                     POSS.push_back(NUM);
                 }
-                if(count > 2)
-                    break;
+                if (count > 2) break;
             }
-            if(count > 2)
-                continue;
-            vector<vector<int>> BoardHist(R, vector<int>(C));
-            for (int itemp = 0; itemp < R; ++itemp) {
-                for (int jtemp = 0; jtemp < C; ++jtemp) {
-                    BoardHist[itemp][jtemp] = Board[itemp][jtemp];
-                }
-            }
-            for(int x : POSS) {
+            if (count > 2) continue;
+            for (int x : POSS) {
                 update_board(i, j, x);
                 Solve();
                 if (!Empty) return;
-                for (int itemp = 0; itemp < R; ++itemp) {
-                    for (int jtemp = 0; jtemp < C; ++jtemp) {
-                        Board[itemp][jtemp] = BoardHist[itemp][jtemp];
-                    }
-                }
+                Board = BoardHist;
                 initialize_possiblility();
             }
         }
