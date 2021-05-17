@@ -11,7 +11,7 @@ vector<vector<bool>> NUMS_EXIST;
 vector<vector<bool>> NUMR_EXIST;
 vector<vector<bool>> NUMC_EXIST;
 
-void Input() {
+void InputFromFile() {
     ifstream read;
     read.open("board.txt");
     for (int i = 0; i < R; ++i) {
@@ -22,6 +22,70 @@ void Input() {
     read.close();
     return;
 }
+
+void helpABC() {
+    for (int i = 1; i <= SET; ++i) {
+        cout << i << ". " << (char)(i - 1 + 'a') << endl;
+    }
+}
+
+void InputFEN() {
+    string FEN;
+    helpABC();
+    cout << "Enter FEN Notation representing each number as their index in "
+            "English alphabets: \n\t--->";
+    fflush(stdin);
+    cin >> FEN;
+    vector<string> ROWS(R);
+    int r = 0;
+    int init = 0;
+    int rLength = 0;
+    for (int i = 0; i < FEN.length(); ++i) {
+        if (FEN[i] == '/') {
+            ROWS[r] = FEN.substr(init, rLength);
+            init = i + 1;
+            rLength = 0;
+            r++;
+        } else {
+            rLength++;
+        }
+    }
+    ROWS[r] = FEN.substr(init, rLength);
+    for (int i = 0; i < R; ++i) {
+        int k = 0;
+        for (int x : ROWS[i]) {
+            if ('1' <= x && x <= '9') {
+                k += (int)(x - '0');
+            } else {
+                Board[i][k] = (int)(x - 'a') + 1;
+                k++;
+            }
+        }
+    }
+}
+
+bool IncludedIn(string choices, char choice) {
+    for (char x : choices) {
+        if (choice == x) return true;
+    }
+    return false;
+}
+
+void Input() {
+    cout << "\t\tYo!\n";
+    cout << "Select Input Method: \n";
+    cout << "   1. From [T]ext File\n";
+    cout << "   2. From [F]EN Notation\n\n";
+    cout << "Enter your choice: ";
+    char choice;
+    cin >> choice;
+    if (IncludedIn("tT1", choice)) {
+        InputFromFile();
+    } else {
+        InputFEN();
+    }
+}
+
 void Display() {
     for (int i = 0; i < R; ++i) {
         for (int j = 0; j < C - 1; ++j) {
